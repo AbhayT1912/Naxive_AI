@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Naxive AI — Intelligence That Adapts</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --accent: #A78BFA;
+  --accent-2: #60A5FA;
+  --accent-dim: #7C5CDB;
+  --accent-glow: rgba(167,139,250,0.18);
+  --accent-light: #C4B5FD;
+}
+[data-theme="dark"] {
+  --bg: #06080F; --bg2: #080B14; --bg3: #10141F;
+  --card: #0F1421; --card2: #131829; --border: #1F2740; --border-soft: #182037;
+  --text: #F4F5FF; --muted: #8C93B5; --white: #fff;
+  --shadow-color: 0,0,0;
+}
+[data-theme="light"] {
+  --bg: #F6F7FE; --bg2: #EFF1FC; --bg3: #fff;
+  --card: #fff; --card2: #FAFAFF; --border: #E0E3F7; --border-soft: #EAECFB;
+  --text: #0D1030; --muted: #5A6080; --white: #fff;
+  --accent: #6D28D9; --accent-2: #2563EB; --accent-dim: #5B21B6;
+  --accent-glow: rgba(109,40,217,0.12); --accent-light: #8B5CF6;
+  --shadow-color: 109,40,217;
+}
+[data-theme="cyber"] {
+  --bg: #000800; --bg2: #000D00; --bg3: #001400;
+  --card: #001200; --card2: #001A00; --border: #00FF4133; --border-soft: #00FF4122;
+  --text: #D6FFD6; --muted: #4DB84D; --white: #00FF41;
+  --accent: #00FF41; --accent-2: #00D9FF; --accent-dim: #00CC33;
+  --accent-glow: rgba(0,255,65,0.14); --accent-light: #39FF85;
+  --shadow-color: 0,255,65;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:'Inter',sans-serif; font-size:16px;
+  line-height:1.6; overflow-x:hidden;
+  transition:background 0.4s, color 0.4s;
+  position:relative;
+}
+body::before{
+  content:''; position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% -10%, var(--accent-glow), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 10%, rgba(96,165,250,0.10), transparent 55%);
+}
+::selection{background:var(--accent); color:#fff}
+
+/* scrollbar */
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border); border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent-dim)}
+
+/* NAV */
+nav{
+  position:fixed; top:0; left:0; width:100%; z-index:200;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:1.05rem 5%;
+  background:rgba(8,11,20,0.72);
+  backdrop-filter:blur(22px) saturate(160%);
+  -webkit-backdrop-filter:blur(22px) saturate(160%);
+  border-bottom:1px solid var(--border-soft);
+  transition:background 0.4s, border-color 0.4s;
+}
+[data-theme="light"] nav{background:rgba(246,247,254,0.78)}
+[data-theme="cyber"] nav{background:rgba(0,8,0,0.82)}
+
+.logo{
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:700; font-size:1.32rem; letter-spacing:-0.02em;
+  color:var(--text); display:flex; align-items:center; gap:0.55rem;
+  text-decoration:none;
+}
+.logo-mark{
+  width:30px; height:30px; border-radius:9px;
+  background:linear-gradient(135deg, var(--accent), var(--accent-2));
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 14px rgba(var(--shadow-color),0.35);
+  position:relative;
+}
+.logo-mark::after{
+  content:''; position:absolute; inset:0; border-radius:9px;
+  background:linear-gradient(135deg, rgba(255,255,255,0.35), transparent 60%);
+}
+.logo-mark svg{width:16px; height:16px; stroke:#fff; fill:none; stroke-width:2.2; position:relative; z-index:1}
+
+.nav-links{list-style:none; display:flex; gap:2.1rem; align-items:center}
+.nav-links a{color:var(--muted); text-decoration:none; font-size:.88rem; font-weight:500; transition:color .2s; position:relative}
+.nav-links a:not(.nav-cta)::after{
+  content:''; position:absolute; left:0; bottom:-6px; width:0; height:1.5px;
+  background:var(--accent); transition:width .25s;
+}
+.nav-links a:not(.nav-cta):hover::after{width:100%}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{
+  background:linear-gradient(135deg, var(--accent), var(--accent-dim));
+  color:#fff !important;
+  padding:.55rem 1.3rem; border-radius:8px;
+  font-weight:600 !important; transition:transform .15s, box-shadow .2s !important;
+  box-shadow:0 4px 16px rgba(var(--shadow-color),0.3);
+}
+.nav-cta:hover{transform:translateY(-2px); box-shadow:0 8px 24px rgba(var(--shadow-color),0.4)}
+
+.theme-switcher{display:flex; gap:5px; align-items:center; background:var(--bg3); padding:4px; border-radius:10px; border:1px solid var(--border-soft)}
+.theme-btn{
+  width:28px; height:28px; border-radius:7px; border:none;
+  cursor:pointer; font-size:.78rem; display:flex; align-items:center; justify-content:center;
+  background:transparent; color:var(--muted); transition:all .2s;
+}
+.theme-btn:hover{color:var(--text)}
+.theme-btn.active{background:var(--card); color:var(--accent); box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+
+.hamburger{display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; background:none; border:none}
+.hamburger span{display:block; width:22px; height:2px; background:var(--text); border-radius:2px; transition:.3s}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+
+.mobile-menu{
+  display:none; flex-direction:column;
+  position:fixed; top:64px; left:0; width:100%; z-index:190;
+  background:var(--bg); border-bottom:1px solid var(--border);
+  padding:1rem 5%;
+}
+.mobile-menu.open{display:flex}
+.mobile-menu a{color:var(--muted); text-decoration:none; padding:.8rem 0; font-size:.95rem; border-bottom:1px solid var(--border-soft)}
+.mobile-menu a:last-child{border:none}
+
+/* HERO */
+#hero{
+  min-height:100vh; display:flex; align-items:center;
+  padding:8rem 5% 4rem; position:relative; overflow:hidden;
+}
+canvas#mesh{position:absolute; inset:0; width:100%; height:100%; opacity:.4; pointer-events:none}
+.hero-glow-orb{
+  position:absolute; width:600px; height:600px; border-radius:50%;
+  background:radial-gradient(circle, var(--accent-glow), transparent 70%);
+  top:-200px; right:-150px; pointer-events:none; filter:blur(20px);
+  animation:orb-float 8s ease-in-out infinite;
+}
+@keyframes orb-float{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,40px)}}
+
+.hero-inner{position:relative; z-index:2; max-width:780px}
+
+.eyebrow{
+  display:inline-flex; align-items:center; gap:.5rem;
+  font-size:.75rem; font-weight:600; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--accent);
+  border:1px solid var(--accent-dim);
+  padding:.4rem 1rem; border-radius:999px; margin-bottom:2rem;
+  background:linear-gradient(135deg, var(--accent-glow), transparent);
+  box-shadow:0 2px 12px rgba(var(--shadow-color),0.12);
+}
+.eyebrow-dot{width:6px; height:6px; border-radius:50%; background:var(--accent); box-shadow:0 0 8px var(--accent); animation:pdot 2.5s ease-in-out infinite}
+@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+
+h1{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(2.7rem,6.2vw,5.4rem); font-weight:700;
+  line-height:1.04; letter-spacing:-.035em; color:var(--text);
+  margin-bottom:1.6rem;
+}
+h1 em{
+  font-style:normal;
+  background:linear-gradient(120deg,var(--accent) 0%,var(--accent-2) 50%,var(--accent-light) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  background-size:200% auto;
+  animation:gradient-shift 6s ease infinite;
+}
+@keyframes gradient-shift{0%,100%{background-position:0% center}50%{background-position:100% center}}
+
+.hero-sub{font-size:1.15rem; color:var(--muted); max-width:560px; margin-bottom:2.4rem; line-height:1.75}
+.hero-actions{display:flex; gap:1rem; flex-wrap:wrap}
+
+.btn-primary{
+  display:inline-flex; align-items:center; gap:.5rem;
+  background:linear-gradient(135deg, var(--accent), var(--accent-dim));
+  color:#fff;
+  font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:.94rem;
+  padding:.9rem 1.9rem; border-radius:10px; text-decoration:none;
+  transition:transform .18s, box-shadow .25s; border:none; cursor:pointer;
+  box-shadow:0 6px 20px rgba(var(--shadow-color),0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.btn-primary:hover{transform:translateY(-3px); box-shadow:0 12px 32px rgba(var(--shadow-color),0.45)}
+.btn-ghost{
+  display:inline-flex; align-items:center; gap:.5rem;
+  background:var(--card); color:var(--text);
+  font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:.94rem;
+  padding:.9rem 1.9rem; border-radius:10px; text-decoration:none;
+  border:1px solid var(--border); transition:border-color .2s, transform .18s, background .2s; cursor:pointer;
+}
+.btn-ghost:hover{border-color:var(--accent); transform:translateY(-3px); background:var(--accent-glow)}
+
+.hero-stats{display:flex; gap:2.5rem; margin-top:3.8rem; padding-top:2.2rem; border-top:1px solid var(--border-soft); flex-wrap:wrap}
+.stat-num{
+  font-family:'Space Grotesk',sans-serif; font-size:2rem; font-weight:700; letter-spacing:-.04em;
+  background:linear-gradient(135deg, var(--text), var(--muted));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.stat-label{font-size:.8rem; color:var(--muted); margin-top:.2rem}
+
+/* SECTIONS */
+section{padding:7rem 5%; position:relative}
+.section-label{
+  font-size:.74rem; letter-spacing:.16em; text-transform:uppercase; color:var(--accent);
+  margin-bottom:1rem; font-weight:700; display:inline-flex; align-items:center; gap:.5rem;
+}
+.section-label::before{content:''; width:18px; height:1.5px; background:var(--accent)}
+.section-title{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(1.8rem,3.6vw,2.9rem); font-weight:700; letter-spacing:-.03em;
+  color:var(--text); line-height:1.1; margin-bottom:1.2rem;
+}
+.section-sub{color:var(--muted); font-size:1rem; max-width:540px; line-height:1.75}
+
+/* CAPABILITIES */
+#capabilities{background:var(--bg2)}
+.cap-header{max-width:620px; margin-bottom:3.5rem}
+.cap-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.25rem}
+.cap-card{
+  background:linear-gradient(160deg, var(--card2), var(--card));
+  border:1px solid var(--border); border-radius:16px; padding:2.1rem;
+  transition:transform .25s, box-shadow .25s, border-color .25s;
+  position:relative; overflow:hidden;
+}
+.cap-card::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity:0; transition:opacity .3s;
+}
+.cap-card:hover{transform:translateY(-6px); border-color:var(--accent-dim); box-shadow:0 16px 40px rgba(var(--shadow-color),0.18)}
+.cap-card:hover::before{opacity:1}
+.cap-icon{
+  width:50px; height:50px; border-radius:12px;
+  background:linear-gradient(135deg, var(--accent-glow), transparent);
+  border:1px solid var(--accent-dim);
+  display:flex; align-items:center; justify-content:center; margin-bottom:1.3rem;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.cap-icon svg{width:23px; height:23px; stroke:var(--accent); fill:none; stroke-width:1.7}
+.cap-card h3{font-family:'Space Grotesk',sans-serif; font-weight:650; font-size:1.08rem; color:var(--text); margin-bottom:.55rem}
+.cap-card p{font-size:.88rem; color:var(--muted); line-height:1.68}
+
+/* WORKFLOW */
+#workflow{background:var(--bg)}
+.workflow-header{max-width:640px; margin-bottom:4rem}
+.workflow-track{position:relative; max-width:900px; margin:0 auto}
+.workflow-line{
+  position:absolute; left:27px; top:30px; bottom:30px; width:2px;
+  background:linear-gradient(180deg, var(--accent), var(--accent-dim), transparent);
+  opacity:.4;
+}
+.workflow-item{
+  display:flex; gap:1.8rem; padding-bottom:2.6rem; position:relative;
+}
+.workflow-item:last-child{padding-bottom:0}
+.workflow-node{
+  width:56px; height:56px; border-radius:50%; flex-shrink:0;
+  background:linear-gradient(135deg, var(--card2), var(--card));
+  border:1.5px solid var(--accent-dim);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.1rem; color:var(--accent);
+  position:relative; z-index:1;
+  box-shadow:0 0 0 6px var(--bg), 0 8px 20px rgba(var(--shadow-color),0.2);
+}
+.workflow-content{
+  flex:1; background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:1.6rem 1.8rem; transition:transform .25s, border-color .25s, box-shadow .25s;
+}
+.workflow-content:hover{transform:translateX(6px); border-color:var(--accent-dim); box-shadow:0 10px 28px rgba(var(--shadow-color),0.14)}
+.workflow-tag{
+  display:inline-block; font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--accent); background:var(--accent-glow); padding:.2rem .6rem; border-radius:5px; margin-bottom:.6rem;
+}
+.workflow-content h4{font-family:'Space Grotesk',sans-serif; font-weight:650; font-size:1.08rem; color:var(--text); margin-bottom:.5rem}
+.workflow-content p{font-size:.88rem; color:var(--muted); line-height:1.7}
+.workflow-meta{display:flex; gap:1.2rem; margin-top:.9rem; flex-wrap:wrap}
+.wf-meta-pill{font-size:.74rem; color:var(--muted); display:flex; align-items:center; gap:.35rem; background:var(--bg3); padding:.25rem .65rem; border-radius:6px; border:1px solid var(--border-soft)}
+.wf-meta-pill svg{width:12px; height:12px; stroke:var(--accent); fill:none; stroke-width:2}
+
+/* HOW / PERF */
+#how{background:var(--bg2)}
+.how-wrap{display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:center}
+.how-steps{display:flex; flex-direction:column}
+.how-step{display:flex; gap:1.6rem; padding:1.8rem 0; border-bottom:1px solid var(--border-soft); transition:padding-left .2s}
+.how-step:hover{padding-left:.4rem}
+.how-step:first-child{border-top:1px solid var(--border-soft)}
+.step-num{
+  font-family:'Space Grotesk',sans-serif; font-size:.78rem; font-weight:700; color:#fff;
+  min-width:30px; height:30px; border-radius:8px; padding-top:0;
+  background:linear-gradient(135deg, var(--accent), var(--accent-dim));
+  display:flex; align-items:center; justify-content:center;
+}
+.step-body h4{font-family:'Space Grotesk',sans-serif; font-weight:650; font-size:1rem; color:var(--text); margin-bottom:.35rem}
+.step-body p{font-size:.86rem; color:var(--muted); line-height:1.68}
+.how-visual{
+  background:linear-gradient(160deg, var(--card2), var(--card));
+  border:1px solid var(--border); border-radius:20px; padding:2.3rem;
+  display:flex; flex-direction:column; gap:1rem;
+  box-shadow:0 20px 50px rgba(0,0,0,0.2);
+}
+.vb-label{display:flex; justify-content:space-between; font-size:.79rem; color:var(--muted); margin-bottom:.25rem}
+.vb-val{color:var(--accent); font-weight:600}
+.visual-bar{height:8px; border-radius:999px; background:var(--bg3); overflow:hidden}
+.visual-bar-fill{height:100%; border-radius:999px; background:linear-gradient(90deg,var(--accent-dim),var(--accent), var(--accent-2)); width:0%; transition:width 1.5s cubic-bezier(.4,0,.2,1); box-shadow:0 0 12px var(--accent-glow)}
+
+/* GROWTH */
+#growth{background:var(--bg)}
+.growth-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:1.4rem; margin-top:3rem; margin-bottom:3rem}
+.growth-card{
+  background:linear-gradient(160deg, var(--card2), var(--card));
+  border:1px solid var(--border); border-radius:16px; padding:1.9rem;
+  position:relative; overflow:hidden; transition:transform .25s, box-shadow .25s;
+}
+.growth-card:hover{transform:translateY(-4px); box-shadow:0 14px 36px rgba(var(--shadow-color),0.15)}
+.growth-card-top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.3rem}
+.growth-label{font-size:.79rem; color:var(--muted); font-weight:500}
+.growth-change{font-size:.72rem; font-weight:700; padding:.25rem .6rem; border-radius:999px; display:flex; align-items:center; gap:.2rem}
+.growth-change.up{background:rgba(34,197,94,0.14); color:#22C55E}
+.growth-value{font-family:'Space Grotesk',sans-serif; font-size:2.3rem; font-weight:700; color:var(--text); letter-spacing:-.03em; margin-bottom:.3rem}
+.growth-sub{font-size:.79rem; color:var(--muted)}
+.growth-chart{display:flex; align-items:flex-end; gap:4px; height:52px; margin-top:1.3rem}
+.growth-bar-mini{flex:1; background:linear-gradient(180deg, var(--accent), var(--accent-dim)); border-radius:3px 3px 0 0; opacity:.3; transition:opacity .3s}
+.growth-bar-mini:last-child{opacity:1}
+
+.chart-panel{
+  background:linear-gradient(160deg, var(--card2), var(--card));
+  border:1px solid var(--border); border-radius:20px; padding:2.4rem;
+  box-shadow:0 20px 50px rgba(0,0,0,0.18);
+}
+.chart-panel-head{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:2.2rem; flex-wrap:wrap; gap:1rem}
+.chart-panel-head h3{font-family:'Space Grotesk',sans-serif; font-size:1.18rem; font-weight:650; color:var(--text)}
+.chart-panel-head p{font-size:.84rem; color:var(--muted); margin-top:.3rem}
+.chart-legend{display:flex; gap:1.2rem; flex-wrap:wrap}
+.legend-item{display:flex; align-items:center; gap:.4rem; font-size:.79rem; color:var(--muted)}
+.legend-dot{width:8px; height:8px; border-radius:50%}
+.bar-chart{display:flex; align-items:flex-end; gap:14px; height:200px; padding-top:1rem}
+.bar-col{flex:1; display:flex; flex-direction:column; align-items:center; gap:.7rem; height:100%; justify-content:flex-end}
+.bar-stack{width:100%; display:flex; flex-direction:column; justify-content:flex-end; height:160px; border-radius:6px 6px 0 0; overflow:hidden; gap:2px}
+.bar-seg{width:100%; border-radius:4px 4px 0 0}
+.bar-seg.rev{background:linear-gradient(180deg, var(--accent-2), var(--accent))}
+.bar-seg.users{background:var(--accent-dim); opacity:.45}
+.bar-month{font-size:.74rem; color:var(--muted); font-weight:500}
+
+/* TESTIMONIALS */
+#testimonials{background:var(--bg2)}
+.t-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.4rem; margin-top:3rem}
+.t-card{
+  background:linear-gradient(160deg, var(--card2), var(--card));
+  border:1px solid var(--border); border-radius:16px; padding:1.9rem;
+  display:flex; flex-direction:column; gap:1.2rem;
+  transition:transform .25s, box-shadow .25s;
+}
+.t-card:hover{transform:translateY(-5px); box-shadow:0 16px 36px rgba(var(--shadow-color),0.15)}
+.t-stars{color:var(--accent); font-size:.95rem; letter-spacing:2px}
+.t-quote{font-size:.9rem; color:var(--text); line-height:1.75}
+.t-author{display:flex; align-items:center; gap:.85rem}
+.t-avatar{
+  width:42px; height:42px; border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent-dim));
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Space Grotesk',sans-serif; font-size:.8rem; font-weight:700; color:#fff; flex-shrink:0;
+  box-shadow:0 4px 12px rgba(var(--shadow-color),0.3);
+}
+.t-name{font-size:.86rem; font-weight:650; color:var(--text)}
+.t-role{font-size:.77rem; color:var(--muted)}
+.t-location{font-size:.72rem; color:var(--accent); margin-top:.15rem; font-weight:500}
+
+/* PRICING */
+#pricing{background:var(--bg)}
+.pricing-header{text-align:center; max-width:620px; margin:0 auto 1.5rem}
+.pricing-header .section-label{justify-content:center}
+.pricing-header .section-label::before{display:none}
+.pricing-header .section-sub{margin:0 auto}
+.billing-toggle{display:flex; align-items:center; justify-content:center; gap:1rem; margin-bottom:3.5rem}
+.toggle-label{font-size:.88rem; color:var(--muted); font-weight:500}
+.toggle-label.active{color:var(--text); font-weight:650}
+.toggle-wrap{width:50px; height:27px; border-radius:999px; background:linear-gradient(135deg, var(--accent), var(--accent-dim)); position:relative; cursor:pointer; box-shadow:inset 0 2px 4px rgba(0,0,0,0.2)}
+.toggle-knob{position:absolute; top:3px; left:3px; width:21px; height:21px; border-radius:50%; background:#fff; transition:transform .25s; box-shadow:0 2px 6px rgba(0,0,0,0.3)}
+.toggle-wrap.annual .toggle-knob{transform:translateX(23px)}
+.save-badge{background:rgba(34,197,94,0.14); color:#22C55E; font-size:.68rem; font-weight:700; padding:.22rem .55rem; border-radius:4px; letter-spacing:.04em; text-transform:uppercase}
+
+.pricing-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:1.6rem; max-width:1150px; margin:0 auto}
+.price-card{
+  background:linear-gradient(160deg, var(--card2), var(--card));
+  border:1px solid var(--border); border-radius:20px; padding:2.2rem; position:relative;
+  transition:transform .25s, box-shadow .25s; display:flex; flex-direction:column;
+}
+.price-card:hover{transform:translateY(-6px); box-shadow:0 20px 48px rgba(0,0,0,.3)}
+.price-card.popular{
+  border:1px solid transparent;
+  background:
+    linear-gradient(160deg, var(--card2), var(--card)) padding-box,
+    linear-gradient(135deg, var(--accent), var(--accent-2)) border-box;
+  box-shadow:0 20px 60px rgba(var(--shadow-color),0.25);
+}
+.popular-badge{
+  position:absolute; top:-13px; left:50%; transform:translateX(-50%);
+  background:linear-gradient(135deg, var(--accent), var(--accent-dim)); color:#fff;
+  font-size:.7rem; font-weight:700; padding:.32rem 1rem;
+  border-radius:999px; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap;
+  box-shadow:0 4px 14px rgba(var(--shadow-color),0.4);
+}
+.plan-name{font-family:'Space Grotesk',sans-serif; font-size:1rem; font-weight:650; color:var(--muted); margin-bottom:.6rem; letter-spacing:.04em; text-transform:uppercase}
+.plan-price{
+  font-family:'Space Grotesk',sans-serif; font-size:2.7rem; font-weight:700;
+  color:var(--text); letter-spacing:-.04em; line-height:1; margin-bottom:.4rem;
+  display:flex; align-items:flex-start; gap:.15rem;
+}
+.plan-price .rupee{font-size:1.4rem; margin-top:.35rem; font-weight:650; color:var(--accent)}
+.plan-price .period{font-size:.9rem; font-weight:400; color:var(--muted); align-self:flex-end; margin-bottom:.25rem}
+.plan-desc{font-size:.84rem; color:var(--muted); margin-bottom:1.6rem; line-height:1.62; min-height:42px}
+.plan-features{list-style:none; display:flex; flex-direction:column; gap:.75rem; margin-bottom:2.1rem; flex:1}
+.plan-features li{display:flex; align-items:flex-start; gap:.6rem; font-size:.85rem; color:var(--muted)}
+.plan-features li .check{
+  width:17px; height:17px; border-radius:50%;
+  background:var(--accent-glow); border:1px solid var(--accent-dim);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;
+}
+.plan-features li .check svg{width:8px; height:8px; stroke:var(--accent); stroke-width:2.6; fill:none}
+.plan-features li.muted-feat .check{background:var(--border); border-color:var(--border)}
+.plan-features li.muted-feat .check svg{stroke:var(--muted); opacity:.4}
+.plan-features li.muted-feat{opacity:.5}
+.gst-note{font-size:.74rem; color:var(--muted); text-align:center; margin-top:1.2rem; opacity:.75}
+
+.setup-banner{
+  max-width:1150px; margin:2rem auto 0; display:flex; align-items:center; justify-content:space-between;
+  gap:1.5rem; flex-wrap:wrap;
+  background:linear-gradient(135deg, var(--accent-glow), transparent);
+  border:1px dashed var(--accent-dim); border-radius:16px; padding:1.6rem 2rem;
+}
+.setup-banner-text h4{font-family:'Space Grotesk',sans-serif; font-weight:650; font-size:1.02rem; color:var(--text); margin-bottom:.3rem}
+.setup-banner-text p{font-size:.85rem; color:var(--muted)}
+.setup-banner-text p strong{color:var(--accent)}
+
+/* FOUNDER */
+#founder{background:var(--bg2)}
+.founder-wrap{display:grid; grid-template-columns:1fr 1.6fr; gap:5rem; align-items:center; max-width:1020px; margin:0 auto}
+.founder-avatar-wrap{display:flex; flex-direction:column; align-items:center; gap:1.5rem}
+.founder-avatar{
+  width:210px; height:210px; border-radius:50%;
+  background:linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-dim));
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Space Grotesk',sans-serif; font-size:4.2rem; font-weight:700; color:#fff;
+  border:4px solid var(--bg2); box-shadow:0 0 0 2px var(--accent-dim), 0 20px 50px rgba(var(--shadow-color),0.35);
+  position:relative;
+}
+.founder-badge{
+  background:var(--accent-glow); border:1px solid var(--accent-dim);
+  color:var(--accent); font-size:.72rem; font-weight:650;
+  padding:.32rem 1rem; border-radius:999px; letter-spacing:.06em; text-transform:uppercase;
+}
+.founder-info h2{font-family:'Space Grotesk',sans-serif; font-size:clamp(1.7rem,3vw,2.5rem); font-weight:700; color:var(--text); margin-bottom:.3rem; letter-spacing:-.02em}
+.founder-title{color:var(--accent); font-size:.92rem; font-weight:600; margin-bottom:1.3rem}
+.founder-bio{color:var(--muted); font-size:.94rem; line-height:1.85; margin-bottom:1.5rem}
+.founder-tags{display:flex; flex-wrap:wrap; gap:.6rem; margin-bottom:1.9rem}
+.founder-tag{background:var(--accent-glow); border:1px solid var(--accent-dim); color:var(--accent); font-size:.76rem; font-weight:600; padding:.32rem .85rem; border-radius:7px}
+.founder-links{display:flex; gap:.8rem; flex-wrap:wrap}
+.founder-link{display:inline-flex; align-items:center; gap:.4rem; color:var(--muted); font-size:.83rem; text-decoration:none; border:1px solid var(--border); padding:.45rem 1rem; border-radius:8px; transition:all .2s; background:var(--card)}
+.founder-link:hover{color:var(--accent); border-color:var(--accent); background:var(--accent-glow); transform:translateY(-2px)}
+
+/* FAQ */
+#faq{background:var(--bg)}
+.faq-wrap{max-width:740px; margin:3.2rem auto 0}
+.faq-item{border-bottom:1px solid var(--border-soft)}
+.faq-q{
+  width:100%; text-align:left; background:none; border:none;
+  color:var(--text); font-family:'Space Grotesk',sans-serif;
+  font-size:.98rem; font-weight:550; cursor:pointer;
+  padding:1.4rem 0; display:flex; justify-content:space-between; align-items:center;
+  gap:1rem; transition:color .2s;
+}
+.faq-q:hover{color:var(--accent)}
+.faq-icon{
+  width:24px; height:24px; border-radius:50%; background:var(--bg3);
+  border:1px solid var(--border); display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; transition:transform .3s, background .2s;
+}
+.faq-icon svg{width:10px; height:10px; stroke:var(--muted); fill:none; stroke-width:2.5}
+.faq-item.open .faq-icon{transform:rotate(45deg); background:var(--accent-glow); border-color:var(--accent)}
+.faq-item.open .faq-icon svg{stroke:var(--accent)}
+.faq-a{font-size:.88rem; color:var(--muted); line-height:1.75; max-height:0; overflow:hidden; transition:max-height .35s ease, padding .3s; padding-bottom:0}
+.faq-item.open .faq-a{max-height:300px; padding-bottom:1.4rem}
+
+/* CTA */
+#cta{background:var(--bg2)}
+.cta-box{
+  max-width:740px; margin:0 auto; border-radius:24px; padding:4.5rem 3rem; text-align:center;
+  background:
+    radial-gradient(ellipse at top, var(--accent-glow), transparent 60%),
+    linear-gradient(160deg,var(--card2) 0%,var(--card) 100%);
+  border:1px solid var(--border);
+  position:relative; overflow:hidden;
+  box-shadow:0 30px 70px rgba(0,0,0,0.3);
+}
+.cta-glow{position:absolute; width:450px; height:450px; background:radial-gradient(circle,var(--accent-glow) 0%,transparent 70%); top:50%; left:50%; transform:translate(-50%,-50%); pointer-events:none}
+.cta-box h2{font-family:'Space Grotesk',sans-serif; font-size:clamp(1.8rem,3.2vw,2.6rem); font-weight:700; letter-spacing:-.03em; color:var(--text); margin-bottom:1rem; position:relative; z-index:1}
+.cta-box p{color:var(--muted); font-size:.98rem; margin-bottom:2.2rem; position:relative; z-index:1}
+.cta-actions{display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; position:relative; z-index:1}
+
+/* FOOTER */
+footer{background:var(--bg); border-top:1px solid var(--border-soft); padding:3.5rem 5% 2rem}
+.footer-top{display:grid; grid-template-columns:2fr 1fr 1fr; gap:3rem; padding-bottom:2.5rem; border-bottom:1px solid var(--border-soft)}
+.footer-brand p{font-size:.85rem; color:var(--muted); line-height:1.75; margin-top:1rem; max-width:280px}
+.footer-col h4{font-family:'Space Grotesk',sans-serif; font-size:.8rem; font-weight:650; color:var(--text); letter-spacing:.08em; text-transform:uppercase; margin-bottom:1.1rem}
+.footer-col ul{list-style:none; display:flex; flex-direction:column; gap:.6rem}
+.footer-col ul a{color:var(--muted); text-decoration:none; font-size:.85rem; transition:color .2s}
+.footer-col ul a:hover{color:var(--accent)}
+.footer-bottom{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; padding-top:1.6rem}
+.footer-copy{color:var(--muted); font-size:.79rem}
+
+/* MODAL */
+.modal-overlay{display:none; position:fixed; inset:0; z-index:500; background:rgba(0,0,0,.78); backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--card2); border:1px solid var(--border); border-radius:20px; width:100%; max-width:550px; padding:2.6rem; position:relative; animation:modal-in .3s cubic-bezier(.2,.8,.2,1); box-shadow:0 30px 80px rgba(0,0,0,0.5)}
+@keyframes modal-in{from{opacity:0;transform:translateY(24px) scale(.98)}}
+.modal-close{position:absolute; top:1.3rem; right:1.3rem; width:32px; height:32px; border-radius:50%; border:1px solid var(--border); background:var(--bg3); color:var(--muted); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1rem; transition:all .2s}
+.modal-close:hover{border-color:var(--accent); color:var(--accent); transform:rotate(90deg)}
+.modal h3{font-family:'Space Grotesk',sans-serif; font-size:1.45rem; font-weight:700; color:var(--text); margin-bottom:.5rem}
+.modal p{font-size:.88rem; color:var(--muted); margin-bottom:1.6rem; line-height:1.65}
+.modal-input{width:100%; background:var(--bg3); border:1px solid var(--border); border-radius:9px; padding:.9rem 1.1rem; color:var(--text); font-family:'Inter',sans-serif; font-size:.9rem; outline:none; transition:border-color .2s, box-shadow .2s; margin-bottom:1rem}
+.modal-input:focus{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-glow)}
+.modal-input::placeholder{color:var(--muted)}
+.modal-row{display:grid; grid-template-columns:1fr 1fr; gap:.8rem}
+.modal-success{display:none; text-align:center; padding:1.5rem 0}
+.modal-success .tick{font-size:3.2rem; margin-bottom:.9rem}
+.modal-success h4{font-family:'Space Grotesk',sans-serif; font-weight:700; color:var(--text); margin-bottom:.5rem}
+.modal-success p{font-size:.85rem; color:var(--muted)}
+
+.fade-in{opacity:0; transform:translateY(26px); transition:opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1)}
+.fade-in.visible{opacity:1; transform:none}
+
+@media(max-width:900px){
+  .how-wrap{grid-template-columns:1fr; gap:2.7rem}
+  .footer-top{grid-template-columns:1fr 1fr; gap:2rem}
+  .founder-wrap{grid-template-columns:1fr; gap:2.7rem; text-align:center}
+  .founder-avatar-wrap{flex-direction:row; justify-content:center}
+  .founder-tags{justify-content:center}
+  .founder-links{justify-content:center}
+  .setup-banner{justify-content:center; text-align:center; flex-direction:column}
+}
+@media(max-width:640px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .hero-stats{gap:1.6rem}
+  .footer-top{grid-template-columns:1fr}
+  section{padding:4.5rem 5%}
+  .cta-box{padding:3rem 1.6rem}
+  .modal-row{grid-template-columns:1fr}
+  .founder-avatar{width:160px; height:160px; font-size:3.2rem}
+  .workflow-line{left:23px}
+  .workflow-node{width:48px; height:48px; font-size:.95rem}
+}
+[data-theme="cyber"] .btn-primary{color:#000}
+[data-theme="cyber"] .nav-cta{color:#000 !important}
+[data-theme="cyber"] .logo-mark svg{stroke:#000}
+[data-theme="cyber"] .step-num{color:#000}
+</style>
+</head>
+<body>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="demoModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-form-wrap">
+      <h3>Try Naxive AI free</h3>
+      <p>Start today — no credit card required. 14-day full-feature trial.</p>
+      <div class="modal-row">
+        <input class="modal-input" placeholder="First name" id="m-fname"/>
+        <input class="modal-input" placeholder="Last name" id="m-lname"/>
+      </div>
+      <input class="modal-input" placeholder="Work email" type="email" id="m-email"/>
+      <input class="modal-input" placeholder="Company name" id="m-company"/>
+      <button class="btn-primary" style="width:100%;justify-content:center" onclick="submitModal()">Start free trial →</button>
+    </div>
+    <div class="modal-success" id="modal-success">
+      <div class="tick">🎉</div>
+      <h4>You're in!</h4>
+      <p>Check your email for the magic link to access your Naxive AI workspace.</p>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#hero">
+    <div class="logo-mark"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></div>
+    Naxive AI
+  </a>
+  <ul class="nav-links">
+    <li><a href="#capabilities">Features</a></li>
+    <li><a href="#workflow">Workflow</a></li>
+    <li><a href="#growth">Growth</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#dukandar">WhatsApp Bot</a></li>
+    <li><a href="#founder">Founder</a></li>
+    <li><a href="#" onclick="openModal();return false" class="nav-cta">Get started free</a></li>
+  </ul>
+  <div style="display:flex;gap:.7rem;align-items:center">
+    <div class="theme-switcher">
+      <button class="theme-btn active" id="btn-dark" onclick="setTheme('dark')" title="Dark">🌙</button>
+      <button class="theme-btn" id="btn-light" onclick="setTheme('light')" title="Light">☀️</button>
+      <button class="theme-btn" id="btn-cyber" onclick="setTheme('cyber')" title="Cyber">⚡</button>
+    </div>
+    <button class="hamburger" id="hamburger" onclick="toggleMobile()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#capabilities" onclick="closeMobile()">Features</a>
+  <a href="#workflow" onclick="closeMobile()">Workflow</a>
+  <a href="#growth" onclick="closeMobile()">Growth</a>
+  <a href="#pricing" onclick="closeMobile()">Pricing</a>
+  <a href="#dukandar" onclick="closeMobile()">WhatsApp Bot</a>
+  <a href="#founder" onclick="closeMobile()">Founder</a>
+  <a href="#" onclick="openModal();closeMobile();return false" style="color:var(--accent);font-weight:600">Get started free →</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="mesh"></canvas>
+  <div class="hero-glow-orb"></div>
+  <div class="hero-inner fade-in">
+    <div class="eyebrow"><span class="eyebrow-dot"></span>Next-generation AI infrastructure</div>
+    <h1>Intelligence that<br/><em>adapts to you</em></h1>
+    <p class="hero-sub">Naxive AI gives your team an AI that learns from your data, scales with your growth, and fits into your existing workflows — without the complexity.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="openModal()">Start free trial →</button>
+      <a href="#workflow" class="btn-ghost">See the workflow</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-num">3.2×</div><div class="stat-label">Avg. productivity lift</div></div>
+      <div><div class="stat-num">99.97%</div><div class="stat-label">Uptime SLA</div></div>
+      <div><div class="stat-num">180ms</div><div class="stat-label">Response time</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CAPABILITIES -->
+<section id="capabilities">
+  <div class="cap-header fade-in">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">One platform, every AI workload</h2>
+    <p class="section-sub">From real-time inference to deep reasoning, Naxive handles it all.</p>
+  </div>
+  <div class="cap-grid fade-in">
+    <div class="cap-card">
+      <div class="cap-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/></svg></div>
+      <h3>Adaptive Reasoning</h3>
+      <p>Fast answers for simple questions, deep thinking for complex decisions — the model adjusts automatically.</p>
+    </div>
+    <div class="cap-card">
+      <div class="cap-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <h3>Real-time Streaming</h3>
+      <p>Sub-200ms streaming responses. Build conversational products that feel instant at any scale.</p>
+    </div>
+    <div class="cap-card">
+      <div class="cap-icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div>
+      <h3>Private Data Layer</h3>
+      <p>Connect your documents and databases. Naxive answers only from your own data — nothing leaks out.</p>
+    </div>
+    <div class="cap-card">
+      <div class="cap-icon"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+      <h3>Workflow Agents</h3>
+      <p>Automate multi-step tasks. Naxive agents plan and execute work — cutting manual effort by up to 70%.</p>
+    </div>
+    <div class="cap-card">
+      <div class="cap-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+      <h3>Enterprise Security</h3>
+      <p>SOC 2 and GDPR ready. Role-based access, audit logs, and zero-retention inference on every plan.</p>
+    </div>
+    <div class="cap-card">
+      <div class="cap-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+      <h3>Multimodal Input</h3>
+      <p>Text, images, and PDFs in a single API call. Naxive parses, relates, and reasons across every format.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WORKFLOW -->
+<section id="workflow">
+  <div class="workflow-header fade-in">
+    <div class="section-label">Workflow</div>
+    <h2 class="section-title">How a request moves through Naxive</h2>
+    <p class="section-sub">A single message travels through five stages before it ever reaches your user — each one optimized for speed and accuracy.</p>
+  </div>
+  <div class="workflow-track fade-in">
+    <div class="workflow-line"></div>
+
+    <div class="workflow-item">
+      <div class="workflow-node">01</div>
+      <div class="workflow-content">
+        <span class="workflow-tag">Input</span>
+        <h4>User sends a message</h4>
+        <p>A request arrives via API, chat widget, or app integration — text, image, or document. Naxive immediately classifies intent and routes it to the right pipeline.</p>
+        <div class="workflow-meta">
+          <span class="wf-meta-pill"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>~15ms classify</span>
+          <span class="wf-meta-pill"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Multimodal aware</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="workflow-item">
+      <div class="workflow-node">02</div>
+      <div class="workflow-content">
+        <span class="workflow-tag">Retrieval</span>
+        <h4>Relevant context is retrieved</h4>
+        <p>Naxive searches your connected private data layer — documents, databases, and past conversations — pulling only what's relevant to ground the response in real information.</p>
+        <div class="workflow-meta">
+          <span class="wf-meta-pill"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/></svg>Private data layer</span>
+          <span class="wf-meta-pill"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>Vector + keyword search</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="workflow-item">
+      <div class="workflow-node">03</div>
+      <div class="workflow-content">
+        <span class="workflow-tag">Reasoning</span>
+        <h4>Adaptive reasoning kicks in</h4>
+        <p>The model decides how much "thinking" the task needs. Simple lookups resolve instantly; complex multi-step problems get deeper, deliberate reasoning before responding.</p>
+        <div class="workflow-meta">
+          <span class="wf-meta-pill"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>Adaptive depth</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="workflow-item">
+      <div class="workflow-node">04</div>
+      <div class="workflow-content">
+        <span class="workflow-tag">Action</span>
+        <h4>Agents take action if needed</h4>
+        <p>If the task requires it, workflow agents call tools, query APIs, or trigger automations — then verify the result before passing it back into the response.</p>
+        <div class="workflow-meta">
+          <span class="wf-meta-pill"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Tool-use + verification</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="workflow-item">
+      <div class="workflow-node">05</div>
+      <div class="workflow-content">
+        <span class="workflow-tag">Output</span>
+        <h4>Response streams back instantly</h4>
+        <p>The final answer streams to your user in under 200ms median latency, while the interaction is logged for analytics and used to improve future responses.</p>
+        <div class="workflow-meta">
+          <span class="wf-meta-pill"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>180ms median</span>
+          <span class="wf-meta-pill"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Zero-retention option</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- HOW / PERF -->
+<section id="how">
+  <div class="how-wrap">
+    <div class="fade-in">
+      <div class="section-label">Setup</div>
+      <h2 class="section-title">From API key to production in a day</h2>
+      <p class="section-sub" style="margin-bottom:2.2rem">We stripped away the complexity so you can focus on building.</p>
+      <div class="how-steps">
+        <div class="how-step"><div class="step-num">1</div><div class="step-body"><h4>Connect your data</h4><p>Link your knowledge bases, databases, or cloud storage via native connectors. Naxive indexes and encrypts everything in minutes.</p></div></div>
+        <div class="how-step"><div class="step-num">2</div><div class="step-body"><h4>Configure your agents</h4><p>Use pre-built templates or build your own multi-step workflows with the visual editor or YAML config.</p></div></div>
+        <div class="how-step"><div class="step-num">3</div><div class="step-body"><h4>Ship to users</h4><p>Embed via REST, WebSocket, or drop-in React components. Monitor performance with real-time dashboards.</p></div></div>
+        <div class="how-step"><div class="step-num">4</div><div class="step-body"><h4>Improve over time</h4><p>Naxive learns from usage patterns, so your AI gets sharper automatically — no retraining needed.</p></div></div>
+      </div>
+    </div>
+    <div class="how-visual fade-in" id="perf-visual">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:.74rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.9rem">Live Performance Metrics</div>
+      <div class="vb-label"><span>Reasoning accuracy</span><span class="vb-val">88%</span></div>
+      <div class="visual-bar"><div class="visual-bar-fill" data-w="88"></div></div>
+      <div style="margin-top:1.1rem" class="vb-label"><span>Context retention</span><span class="vb-val">73%</span></div>
+      <div class="visual-bar"><div class="visual-bar-fill" data-w="73"></div></div>
+      <div style="margin-top:1.1rem" class="vb-label"><span>Response relevance</span><span class="vb-val">95%</span></div>
+      <div class="visual-bar"><div class="visual-bar-fill" data-w="95"></div></div>
+      <div style="margin-top:1.1rem" class="vb-label"><span>Tool-use precision</span><span class="vb-val">82%</span></div>
+      <div class="visual-bar"><div class="visual-bar-fill" data-w="82"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- GROWTH -->
+<section id="growth">
+  <div class="fade-in" style="text-align:center; max-width:620px; margin:0 auto">
+    <div class="section-label" style="justify-content:center"><span></span></div>
+    <div class="section-label" style="justify-content:center; margin:0 auto 1rem">Business Analysis</div>
+    <h2 class="section-title">How much we've grown</h2>
+    <p class="section-sub" style="margin:0 auto">A transparent look at our growth since launch.</p>
+  </div>
+
+  <div class="growth-grid fade-in">
+    <div class="growth-card">
+      <div class="growth-card-top"><span class="growth-label">Monthly Revenue</span><span class="growth-change up">↑ 64%</span></div>
+      <div class="growth-value">₹5L</div>
+      <div class="growth-sub">vs ₹3L last quarter</div>
+      <div class="growth-chart">
+        <div class="growth-bar-mini" style="height:30%"></div><div class="growth-bar-mini" style="height:42%"></div>
+        <div class="growth-bar-mini" style="height:38%"></div><div class="growth-bar-mini" style="height:55%"></div>
+        <div class="growth-bar-mini" style="height:70%"></div><div class="growth-bar-mini" style="height:100%"></div>
+      </div>
+    </div>
+    <div class="growth-card">
+      <div class="growth-card-top"><span class="growth-label">Active Customers</span><span class="growth-change up">↑ 41%</span></div>
+      <div class="growth-value">840+</div>
+      <div class="growth-sub">vs 596 last quarter</div>
+      <div class="growth-chart">
+        <div class="growth-bar-mini" style="height:40%"></div><div class="growth-bar-mini" style="height:45%"></div>
+        <div class="growth-bar-mini" style="height:58%"></div><div class="growth-bar-mini" style="height:65%"></div>
+        <div class="growth-bar-mini" style="height:82%"></div><div class="growth-bar-mini" style="height:100%"></div>
+      </div>
+    </div>
+    <div class="growth-card">
+      <div class="growth-card-top"><span class="growth-label">Tokens Processed</span><span class="growth-change up">↑ 89%</span></div>
+      <div class="growth-value">4.1B/day</div>
+      <div class="growth-sub">vs 2.2B/day last quarter</div>
+      <div class="growth-chart">
+        <div class="growth-bar-mini" style="height:25%"></div><div class="growth-bar-mini" style="height:32%"></div>
+        <div class="growth-bar-mini" style="height:48%"></div><div class="growth-bar-mini" style="height:60%"></div>
+        <div class="growth-bar-mini" style="height:78%"></div><div class="growth-bar-mini" style="height:100%"></div>
+      </div>
+    </div>
+    <div class="growth-card">
+      <div class="growth-card-top"><span class="growth-label">Customer Retention</span><span class="growth-change up">↑ 6%</span></div>
+      <div class="growth-value">94.2%</div>
+      <div class="growth-sub">vs 88.1% last quarter</div>
+      <div class="growth-chart">
+        <div class="growth-bar-mini" style="height:75%"></div><div class="growth-bar-mini" style="height:78%"></div>
+        <div class="growth-bar-mini" style="height:82%"></div><div class="growth-bar-mini" style="height:88%"></div>
+        <div class="growth-bar-mini" style="height:92%"></div><div class="growth-bar-mini" style="height:100%"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-panel fade-in">
+    <div class="chart-panel-head">
+      <div>
+        <h3>Revenue & user growth — last 6 months</h3>
+        <p>Steady upward trend across both revenue and active users.</p>
+      </div>
+      <div class="chart-legend">
+        <div class="legend-item"><span class="legend-dot" style="background:var(--accent)"></span>Revenue</div>
+        <div class="legend-item"><span class="legend-dot" style="background:var(--accent-dim);opacity:.6"></span>Active users</div>
+      </div>
+    </div>
+    <div class="bar-chart">
+      <div class="bar-col"><div class="bar-stack"><div class="bar-seg users" style="height:40%"></div><div class="bar-seg rev" style="height:30%"></div></div><div class="bar-month">Jan</div></div>
+      <div class="bar-col"><div class="bar-stack"><div class="bar-seg users" style="height:45%"></div><div class="bar-seg rev" style="height:38%"></div></div><div class="bar-month">Feb</div></div>
+      <div class="bar-col"><div class="bar-stack"><div class="bar-seg users" style="height:52%"></div><div class="bar-seg rev" style="height:45%"></div></div><div class="bar-month">Mar</div></div>
+      <div class="bar-col"><div class="bar-stack"><div class="bar-seg users" style="height:60%"></div><div class="bar-seg rev" style="height:58%"></div></div><div class="bar-month">Apr</div></div>
+      <div class="bar-col"><div class="bar-stack"><div class="bar-seg users" style="height:72%"></div><div class="bar-seg rev" style="height:75%"></div></div><div class="bar-month">May</div></div>
+      <div class="bar-col"><div class="bar-stack"><div class="bar-seg users" style="height:85%"></div><div class="bar-seg rev" style="height:95%"></div></div><div class="bar-month">Jun</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="fade-in">
+    <div class="section-label">Customer Reviews</div>
+    <h2 class="section-title">Loved by teams across India</h2>
+  </div>
+  <div class="t-grid fade-in">
+    <div class="t-card">
+      <div class="t-stars">★★★★★</div>
+      <p class="t-quote">"Naxive cut our support resolution time in half. What used to take 2 hours now takes 45 minutes. Genuinely impressive product."</p>
+      <div class="t-author"><div class="t-avatar">RK</div><div><div class="t-name">Rahul Kapoor</div><div class="t-role">Founder, E-commerce Startup</div><div class="t-location">Mumbai, Maharashtra</div></div></div>
+    </div>
+    <div class="t-card">
+      <div class="t-stars">★★★★★</div>
+      <p class="t-quote">"We had our internal knowledge assistant running in two days. The private data layer is rock solid — nothing ever leaves our systems."</p>
+      <div class="t-author"><div class="t-avatar">PS</div><div><div class="t-name">Priya Sharma</div><div class="t-role">CTO, FinTech Startup</div><div class="t-location">Bengaluru, Karnataka</div></div></div>
+    </div>
+    <div class="t-card">
+      <div class="t-stars">★★★★★</div>
+      <p class="t-quote">"The API is so clean our developers were productive from day one. Latency is the best we've tested against any provider so far."</p>
+      <div class="t-author"><div class="t-avatar">AV</div><div><div class="t-name">Arjun Verma</div><div class="t-role">Lead Developer, SaaS Company</div><div class="t-location">Pune, Maharashtra</div></div></div>
+    </div>
+    <div class="t-card">
+      <div class="t-stars">★★★★★</div>
+      <p class="t-quote">"Pricing in rupees was a relief — no more dollar conversion headaches eating into our margins. Finally a platform built for Indian teams."</p>
+      <div class="t-author"><div class="t-avatar">NK</div><div><div class="t-name">Neha Kulkarni</div><div class="t-role">Product Manager, EdTech Platform</div><div class="t-location">Hyderabad, Telangana</div></div></div>
+    </div>
+    <div class="t-card">
+      <div class="t-stars">★★★★★</div>
+      <p class="t-quote">"Multimodal support means our invoices, charts, and documents now run through one pipeline instead of three separate tools."</p>
+      <div class="t-author"><div class="t-avatar">SM</div><div><div class="t-name">Saurabh Mishra</div><div class="t-role">Operations Head, Logistics Startup</div><div class="t-location">Delhi, NCR</div></div></div>
+    </div>
+    <div class="t-card">
+      <div class="t-stars">★★★★★</div>
+      <p class="t-quote">"Support is incredibly responsive — any question gets answered fast. This product genuinely solves a real problem for Indian startups."</p>
+      <div class="t-author"><div class="t-avatar">DT</div><div><div class="t-name">Divya Tiwari</div><div class="t-role">CEO, HealthTech Startup</div><div class="t-location">Jaipur, Rajasthan</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="pricing-header fade-in">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Simple, transparent pricing</h2>
+    <p class="section-sub">No hidden fees. Start free and scale as you grow.</p>
+  </div>
+  <div class="billing-toggle fade-in">
+    <span class="toggle-label active" id="lbl-monthly">Monthly</span>
+    <div class="toggle-wrap" id="billingToggle" onclick="toggleBilling()"><div class="toggle-knob"></div></div>
+    <span class="toggle-label" id="lbl-annual">Annual <span class="save-badge">Save 20%</span></span>
+  </div>
+  <div class="pricing-grid fade-in">
+
+    <div class="price-card">
+      <div class="plan-name">Starter</div>
+      <div class="plan-price"><span class="rupee">₹</span><span class="price-val" data-monthly="4,999" data-annual="3,999">4,999</span><span class="period">/mo</span></div>
+      <div class="plan-desc">For individuals and small projects exploring AI.</div>
+      <ul class="plan-features">
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>50,000 tokens / month</li>
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>1 AI agent</li>
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>Community support</li>
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>REST API access</li>
+        <li class="muted-feat"><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>Private data layer</li>
+        <li class="muted-feat"><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>SSO &amp; SAML</li>
+      </ul>
+      <button class="btn-ghost" onclick="openModal()" style="width:100%;justify-content:center">Get started</button>
+    </div>
+
+    <div class="price-card popular">
+      <div class="popular-badge">Most popular</div>
+      <div class="plan-price"><span class="rupee">₹</span><span class="price-val" data-monthly="6,999" data-annual="5,599">6,999</span><span class="period">/mo</span></div>
+      <div class="plan-name" style="margin-top:.3rem">Growth</div>
+      <div class="plan-desc">For growing teams needing more power and reliability.</div>
+      <ul class="plan-features">
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>5M tokens / month</li>
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>10 AI agents</li>
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>Priority email support</li>
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>Private data layer</li>
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>WebSocket streaming</li>
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>Advanced analytics</li>
+      </ul>
+      <button class="btn-primary" onclick="openModal()" style="width:100%;justify-content:center">Start 14-day trial →</button>
+    </div>
+
+    <div class="price-card">
+      <div class="plan-name">Premium</div>
+      <div class="plan-price"><span class="rupee">₹</span><span class="price-val" data-monthly="11,999" data-annual="9,599">11,999</span><span class="period">/mo</span></div>
+      <div class="plan-desc">For large organizations needing custom limits and dedicated support.</div>
+      <ul class="plan-features">
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>Unlimited tokens</li>
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>Unlimited agents</li>
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>24/7 dedicated support</li>
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>SOC 2 / GDPR ready</li>
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>SSO &amp; SAML</li>
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>Free website + 6 months hosting</li>
+      </ul>
+      <button class="btn-ghost" onclick="openModal()" style="width:100%;justify-content:center">Talk to sales</button>
+    </div>
+
+  </div>
+
+  <div class="setup-banner fade-in">
+    <div class="setup-banner-text">
+      <h4>Don't want to set it up yourself?</h4>
+      <p>We'll handle the entire setup for you — connectors, agents, and deployment — for a one-time fee of <strong>₹2,999</strong>. Premium plan includes a free website with 6 months hosting.</p>
+    </div>
+    <button class="btn-primary" onclick="openModal()">Get setup done for me →</button>
+  </div>
+
+  <p class="gst-note">* Prices shown are exclusive of GST. Annual plans save you 20%.</p>
+</section>
+
+<!-- DUKANDAR WHATSAPP BOT -->
+<section id="dukandar">
+  <div class="pricing-header fade-in">
+    <div class="section-label">New Launch</div>
+    <h2 class="section-title">WhatsApp Order Bot for Dukandars</h2>
+    <p class="section-sub">Let your customers order directly on WhatsApp. We set up your entire dukaan — no extra charges, no hidden setup fee. Just one monthly plan.</p>
+  </div>
+  <div class="pricing-grid fade-in" style="max-width:420px; margin:0 auto;">
+    <div class="price-card popular">
+      <div class="popular-badge">Dukandar Special</div>
+      <div class="plan-name" style="margin-top:.3rem">Dukandar Bot</div>
+      <div class="plan-price"><span class="rupee">₹</span><span class="price-val" data-monthly="2,999" data-annual="2,399">2,999</span><span class="period">/mo</span></div>
+      <div class="plan-desc">Everything your shop needs to take orders on WhatsApp — fully set up by us, no extra cost.</div>
+      <ul class="plan-features">
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>WhatsApp order-taking bot</li>
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>Full shop catalog setup</li>
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>Order &amp; inventory management</li>
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>Customer order history</li>
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>No setup fee — included free</li>
+        <li><span class="check"><svg viewBox="0 0 10 8"><polyline points="1,4 4,7 9,1"/></svg></span>Dedicated onboarding support</li>
+      </ul>
+      <button class="btn-primary" onclick="openModal()" style="width:100%;justify-content:center">Set up my dukaan →</button>
+    </div>
+  </div>
+  <p class="gst-note">* Prices shown are exclusive of GST. Annual plans save you 20%. Setup, training &amp; onboarding included free with every monthly plan.</p>
+</section>
+
+<!-- FOUNDER -->
+<section id="founder">
+  <div style="text-align:center; margin-bottom:3.5rem" class="fade-in">
+    <div class="section-label" style="justify-content:center">Founder</div>
+    <h2 class="section-title">The person behind Naxive AI</h2>
+  </div>
+  <div class="founder-wrap fade-in">
+    <div class="founder-avatar-wrap">
+      <div>
+        <div class="founder-avatar">PJ</div>
+        <div style="text-align:center; margin-top:1.1rem"><div class="founder-badge">Founder &amp; CEO</div></div>
+      </div>
+    </div>
+    <div class="founder-info">
+      <h2>Parth Joshi</h2>
+      <div class="founder-title">Founder &amp; CEO, Naxive AI</div>
+      <p class="founder-bio">Parth Joshi is the founder behind Naxive AI, built on a simple idea: AI infrastructure should be powerful, affordable, and easy to use — without forcing teams to stitch together five different tools. With a strong engineering background, Parth set out to build a platform that genuinely removes complexity instead of adding to it.</p>
+      <p class="founder-bio" style="margin-top:.8rem">"Our goal is simple — give every team, regardless of size, access to AI infrastructure that just works."</p>
+      <div class="founder-tags">
+        <span class="founder-tag">AI &amp; ML</span>
+        <span class="founder-tag">Startup Builder</span>
+        <span class="founder-tag">Product Vision</span>
+        <span class="founder-tag">Full-Stack Dev</span>
+      </div>
+      <div class="founder-links">
+        <a class="founder-link" href="#">Twitter</a>
+        <a class="founder-link" href="#">LinkedIn</a>
+        <a class="founder-link" href="#">GitHub</a>
+        <a class="founder-link" href="#" onclick="openModal();return false">Get in touch</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="fade-in" style="text-align:center; max-width:620px; margin:0 auto">
+    <div class="section-label" style="justify-content:center">FAQ</div>
+    <h2 class="section-title">Frequently asked questions</h2>
+  </div>
+  <div class="faq-wrap fade-in">
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Is my data used to train Naxive's models?<span class="faq-icon"><svg viewBox="0 0 12 12"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg></span></button>
+      <div class="faq-a">Never. Your data stays yours. All paid plans run under a strict zero-training policy, and everything is encrypted at rest and in transit.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Can I change or cancel my plan anytime?<span class="faq-icon"><svg viewBox="0 0 12 12"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg></span></button>
+      <div class="faq-a">Yes, anytime, directly from your dashboard. Annual plans are refunded on a pro-rata basis if you cancel early.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Do you offer setup as a service?<span class="faq-icon"><svg viewBox="0 0 12 12"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg></span></button>
+      <div class="faq-a">Yes — for ₹2,999 one-time, our team will fully configure your data connectors, agents, and deployment so you don't have to touch a single setting.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">What payment methods are supported?<span class="faq-icon"><svg viewBox="0 0 12 12"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg></span></button>
+      <div class="faq-a">UPI, all major credit/debit cards, and net banking. Payments are in Indian rupees with GST invoices provided.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">What's included in the free trial?<span class="faq-icon"><svg viewBox="0 0 12 12"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg></span></button>
+      <div class="faq-a">A full 14-day Pro trial — no credit card needed. All features are unlocked so you can properly evaluate the platform.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-box fade-in">
+    <div class="cta-glow"></div>
+    <h2>Ready to build with Naxive?</h2>
+    <p>Start free today. No credit card required for the first 14 days.</p>
+    <div class="cta-actions">
+      <button class="btn-primary" onclick="openModal()">Create free account →</button>
+      <button class="btn-ghost" onclick="openModal()">Talk to sales</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo" style="font-size:1.2rem"><div class="logo-mark"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></div>Naxive AI</div>
+      <p>AI infrastructure built for teams who move fast. Founded by Parth Joshi.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="#capabilities">Features</a></li>
+        <li><a href="#workflow">Workflow</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#growth">Growth</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#founder">Founder</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 Naxive AI — Founded by Parth Joshi.</div>
+  </div>
+</footer>
+
+<script>
+let meshColor='167,139,250';
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  document.querySelectorAll('.theme-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('btn-'+t).classList.add('active');
+  meshColor = t==='cyber'?'0,255,65': t==='light'?'109,40,217':'167,139,250';
+}
+function toggleMobile(){
+  document.getElementById('hamburger').classList.toggle('open');
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+function closeMobile(){
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+function openModal(){
+  document.getElementById('demoModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('demoModal').classList.remove('open');
+  document.body.style.overflow='';
+  setTimeout(()=>{
+    document.getElementById('modal-form-wrap').style.display='block';
+    document.getElementById('modal-success').style.display='none';
+  },300);
+}
+function submitModal(){
+  const email=document.getElementById('m-email').value;
+  if(!email){document.getElementById('m-email').focus();return;}
+  document.getElementById('modal-form-wrap').style.display='none';
+  document.getElementById('modal-success').style.display='block';
+}
+document.getElementById('demoModal').addEventListener('click',function(e){if(e.target===this)closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+let isAnnual=false;
+function toggleBilling(){
+  isAnnual=!isAnnual;
+  document.getElementById('billingToggle').classList.toggle('annual',isAnnual);
+  document.getElementById('lbl-monthly').classList.toggle('active',!isAnnual);
+  document.getElementById('lbl-annual').classList.toggle('active',isAnnual);
+  document.querySelectorAll('.price-val').forEach(v=>{
+    v.textContent=isAnnual?v.dataset.annual:v.dataset.monthly;
+  });
+}
+
+function toggleFaq(btn){
+  const item=btn.parentElement;
+  const open=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+  if(!open)item.classList.add('open');
+}
+
+(function(){
+  const canvas=document.getElementById('mesh');
+  const ctx=canvas.getContext('2d');
+  let W,H,nodes=[];
+  const N=70,D=170;
+  let mouse={x:-999,y:-999};
+  function resize(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight}
+  function init(){
+    nodes=[];
+    for(let i=0;i<N;i++)nodes.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.45,vy:(Math.random()-.5)*.45,r:Math.random()*2+1});
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    for(let i=0;i<nodes.length;i++){
+      const a=nodes[i];
+      for(let j=i+1;j<nodes.length;j++){
+        const b=nodes[j];
+        const dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
+        if(d<D){
+          ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle=`rgba(${meshColor},${(1-d/D)*.5})`;
+          ctx.lineWidth=.7;ctx.stroke();
+        }
+      }
+    }
+    for(const n of nodes){
+      ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${meshColor},.75)`;ctx.fill();
+    }
+  }
+  function update(){
+    for(const n of nodes){
+      const dx=mouse.x-n.x,dy=mouse.y-n.y,d=Math.hypot(dx,dy);
+      if(d<150){n.vx+=dx/d*.03;n.vy+=dy/d*.03}
+      n.vx*=.99;n.vy*=.99;
+      n.x+=n.vx;n.y+=n.vy;
+      if(n.x<0||n.x>W)n.vx*=-1;
+      if(n.y<0||n.y>H)n.vy*=-1;
+    }
+  }
+  function loop(){update();draw();requestAnimationFrame(loop)}
+  canvas.parentElement.addEventListener('mousemove',e=>{
+    const r=canvas.getBoundingClientRect();
+    mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;
+  });
+  canvas.parentElement.addEventListener('mouseleave',()=>{mouse.x=-999;mouse.y=-999});
+  resize();init();loop();
+  window.addEventListener('resize',()=>{resize();init()});
+})();
+
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:.1});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+window.addEventListener('load',()=>{
+  setTimeout(()=>document.querySelector('#hero .fade-in')?.classList.add('visible'),80);
+});
+
+const barObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting)e.target.querySelectorAll('.visual-bar-fill').forEach(b=>{b.style.width=b.dataset.w+'%'});
+  });
+},{threshold:.3});
+const pv=document.getElementById('perf-visual');
+if(pv)barObs.observe(pv);
+</script>
+</body>
+</html>
